@@ -4,12 +4,15 @@ import App from './App'
 import './index.css'
 import { ThemeProvider, GlobalStyle } from '@react95/core';
 import '@react95/icons/icons.css'
+// import ErrorBoundary from './ErrorBoundary';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
+  // <ErrorBoundary>
+  <React.StrictMode>
   <ThemeProvider>
     <GlobalStyle />
     <App />
-  </ThemeProvider>
-  // </React.StrictMode>,
+    </ThemeProvider>
+  </React.StrictMode>
+  // </ErrorBoundary>
 )

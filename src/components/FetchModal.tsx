@@ -6,30 +6,44 @@ interface FetchModalProps {
   url: string;
   title: string;
   onClose: () => void;
+  token: string | null;
 }
 
-const FetchModal: React.FC<FetchModalProps> = ({ url, title, onClose }) => {
+const FetchModal: React.FC<FetchModalProps> = ({ url, title, onClose, token }) => {
   const [content, setContent] = useState<string>('Loading...');
   const [error, setError] = useState<string | null>(null);
+  const [, forceUpdate] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const headers: HeadersInit = {};
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
         const response = await fetch(url, {
-          credentials: 'include'
+          credentials: token ? 'omit' : 'include',
+          headers
         });
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const text = await response.text();
         setContent(text);
       } catch (e) {
-        // setError(`Failed to fetch data: ${e.message}`);
+        setError(`Failed to fetch data idk why  tho`);
       }
     };
 
     fetchData();
-  }, [url]);
+  }, [url, forceUpdate]);
+
+  // Function to trigger re-fetch when global token changes
+  const refreshData = () => {
+    forceUpdate({});
+  };
 
   return (
     <Modal
@@ -54,6 +68,9 @@ const FetchModal: React.FC<FetchModalProps> = ({ url, title, onClose }) => {
           </pre>
         )}
       </Frame>
+      <Button onClick={refreshData} style={{ marginTop: '10px' }}>
+        Refresh
+      </Button>
       <Button onClick={onClose} style={{ marginTop: '10px' }}>
         Close
       </Button>

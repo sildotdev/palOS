@@ -1,10 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { List, TaskBar, Modal } from '@react95/core';
-import { ReaderClosed, WindowsExplorer, FolderFile, Inetcpl1306, Inetcpl1313 } from '@react95/icons';
+import { ReaderClosed, WindowsExplorer, FolderFile, Inetcpl1306, Inetcpl1313, Isign324001 } from '@react95/icons';
 import './App.css';
 import Desktop from './components/Desktop';
 import FetchModal from './components/FetchModal';
 import PoliceApp from './components/PoliceApp';
+import Webamp from 'webamp';
+
+// Global state for JWT token
+let globalJwtToken: string | null = null;
+
+// Global function to set JWT token
+export const setGlobalAuthToken = (token: string | null) => {
+  globalJwtToken = token;
+  // Trigger a re-render of the entire app
+  if (window.dispatchEvent) {
+    window.dispatchEvent(new Event('storage'));
+  }
+};
+
+// Make setGlobalAuthToken available globally
+(window as any).setGlobalAuthToken = setGlobalAuthToken;
 
 function App() {
   const [first, toggleFirst] = useState(false);
@@ -15,6 +31,13 @@ function App() {
   const closeSecond = () => toggleSecond(false);
   const closeFetchModal = () => setFetchModal(false);
   const closePoliceModal = () => setPoliceModal(false);
+  const [, forceUpdate] = useState({});
+
+  useEffect(() => {
+    const handleStorageEvent = () => forceUpdate({});
+    window.addEventListener('storage', handleStorageEvent);
+    return () => window.removeEventListener('storage', handleStorageEvent);
+  }, []);
 
   const desktopIcons = [
     {
@@ -50,11 +73,46 @@ function App() {
       onDoubleClick: () => {
         setPoliceModal(true);
       }
+    },
+    {
+      id: 'hacking',
+      icon: <Isign324001 variant="32x32_4"/>,
+      text: "Hacking",
+      onDoubleClick: () => {
+        const webamp = new Webamp({
+          initialSkin: {
+            url: '/webamp/skins/Windows_95_98.wsz',
+          },
+          initialTracks: [{
+              metaData: {
+                  artist: "4311fead41",
+                  title: "a6ba3a8c723b27e1a"
+              },
+              url: `/hack1.wav`,
+              duration: 71
+          }]
+        });
+        webamp.onClose(() => {
+            webamp.dispose();
+        });
+
+        let winampContainer = document.getElementById('winamp-container');
+        if (winampContainer) {
+          webamp.renderWhenReady(winampContainer);
+        } else {
+          console.error('Winamp container not found');
+        }
+
+        webamp.onWillClose((cancel) => {
+          cancel();
+        });        
+      }
     }
   ];
 
   return (
     <div style={{ height: '100vh', width: '100vw', position: 'relative', overflow: 'hidden' }}>
+      <div id="winamp-container"></div>
       <Desktop icons={desktopIcons} />
 
       {first && (
@@ -80,10 +138,12 @@ function App() {
 
       {fetchModal && (
         <FetchModal
-          url="http://localhost:3030/client/police/arrests"  // Replace with your actual API endpoint
+          url="http://localhost:3030/client/police/arrests"
           title="Fetched Content"
           onClose={closeFetchModal}
+          token={globalJwtToken}
         />
+
       )}
 
       {policeModal && (

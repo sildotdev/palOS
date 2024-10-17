@@ -165,7 +165,7 @@ function App() {
             {/* <List.Separator /> */}
             <List.Item icon={<ReaderClosed variant="32x32_4" />} onClick={() => {
               // redirect to localhost:3030/webclient/login
-              window.location.href = 'https://papi.palominorp.com/webclient/login?returnUrl=' + encodeURIComponent(window.location.href);
+              window.location.href = 'https://auth.palominorp.com/webclient/login?returnUrl=' + encodeURIComponent(window.location.href);
             }}>
               Login
             </List.Item>

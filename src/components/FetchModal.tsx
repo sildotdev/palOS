@@ -27,6 +27,8 @@ const FetchModal: React.FC<FetchModalProps> = ({ url, title, onClose, token }) =
           headers
         });
 
+        console.log('credentials were', token ? 'omit' : 'include');
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

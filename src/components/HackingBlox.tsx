@@ -69,7 +69,10 @@ const HackingBlocksModal: React.FC<HackingBlocksModalProps> = ({ onClose }) => {
 
   // Initialize the game
   const initializeGame = useCallback(() => {
+    // Generate 3 correct patterns
     const correctPatterns = Array(3).fill(null).map(() => generatePattern());
+    
+    // Create the full target pattern
     const fullTarget = Array(GRID_SIZE).fill(null).map((_, y) => 
       Array(GRID_SIZE * 3).fill(null).map((_, x) => {
         const section = Math.floor(x / GRID_SIZE);
@@ -77,13 +80,13 @@ const HackingBlocksModal: React.FC<HackingBlocksModalProps> = ({ onClose }) => {
       })
     );
     
-    // Create variations of the correct patterns for wrong options
-    const incorrectPatterns = Array(NUM_OPTIONS - 3).fill(null).map(() => {
-      // Randomly choose one of the correct patterns to create a variation from
-      const sourcePattern = correctPatterns[Math.floor(Math.random() * 3)];
-      return createPatternVariation(sourcePattern);
-    });
+    // Create 2 variations for each correct pattern
+    const incorrectPatterns = correctPatterns.flatMap(correctPattern => [
+      createPatternVariation(correctPattern),
+      createPatternVariation(correctPattern)
+    ]);
     
+    // Combine correct patterns and their variations
     const allGrids = [
       ...correctPatterns.map((pattern, index) => ({
         id: index,

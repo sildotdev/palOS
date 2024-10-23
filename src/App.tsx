@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { List, TaskBar, Modal } from '@react95/core';
-import { ReaderClosed, WindowsExplorer, FolderFile, Inetcpl1306, Inetcpl1313, Isign324001 } from '@react95/icons';
+import { ReaderClosed, WindowsExplorer, FolderFile, Inetcpl1306, Inetcpl1313, Isign324001, Cdplayer107 } from '@react95/icons';
 import './App.css';
 import Desktop from './components/Desktop';
 import FetchModal from './components/FetchModal';
 import PoliceApp from './components/PoliceApp';
+import HackingModal from './components/Hacking';
+import HackingBlocksModal from './components/HackingBlox';
 import Webamp from 'webamp';
 
 // Global state for JWT token
@@ -27,10 +29,14 @@ function App() {
   const [second, toggleSecond] = useState(false);
   const [fetchModal, setFetchModal] = useState(false);
   const [policeModal, setPoliceModal] = useState(false);
+  const [hackingModal, setHackingModal] = useState(false);
+  const [hackingBlocksModal, setHackingBlocksModal] = useState(false);
   const closeFirst = () => toggleFirst(false);
   const closeSecond = () => toggleSecond(false);
   const closeFetchModal = () => setFetchModal(false);
   const closePoliceModal = () => setPoliceModal(false);
+  const closeHackingModal = () => setHackingModal(false);
+  const closeHackingBlocksModal = () => setHackingBlocksModal(false);
   const [, forceUpdate] = useState({});
 
   useEffect(() => {
@@ -75,9 +81,25 @@ function App() {
       }
     },
     {
-      id: 'hacking',
+      id: 'palomino-hacking-1',
       icon: <Isign324001 variant="32x32_4"/>,
-      text: "Hacking",
+      text: "Hacking - 1",
+      onDoubleClick: () => {
+        setHackingModal(true);
+      }
+    },
+    {
+      id: 'palomino-hacking-2',
+      icon: <Isign324001 variant="32x32_4"/>,
+      text: "Hacking - 2",
+      onDoubleClick: () => {
+        setHackingBlocksModal(true);
+      }
+    },
+    {
+      id: 'winamp',
+      icon: <Cdplayer107 variant="32x32_4"/>,
+      text: "Winamp",
       onDoubleClick: () => {
         const webamp = new Webamp({
           initialSkin: {
@@ -148,6 +170,14 @@ function App() {
 
       {policeModal && (
         <PoliceApp onClose={closePoliceModal} />
+      )}
+
+      {hackingModal && (
+        <HackingModal onClose={closeHackingModal} />
+      )}
+
+      {hackingBlocksModal && (
+        <HackingBlocksModal onClose={closeHackingBlocksModal} />
       )}
 
       <TaskBar

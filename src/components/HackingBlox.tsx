@@ -8,7 +8,7 @@ interface HackingBlocksModalProps {
 
 const HackingBlocksModal: React.FC<HackingBlocksModalProps> = ({ onClose }) => {
   const TIME_LIMIT = 45;
-  const GRID_SIZE = 8;
+  const GRID_SIZE = 6;
   const NUM_OPTIONS = 9;
   
   const [targetPattern, setTargetPattern] = useState<boolean[][]>([]);
@@ -151,8 +151,8 @@ const HackingBlocksModal: React.FC<HackingBlocksModalProps> = ({ onClose }) => {
   // Render a single grid cell with fixed pixel size
   const renderCell = (filled: boolean, small: boolean = false) => (
     <div style={{
-      width: '12px',
-      height: '12px',
+      width: '16px',
+      height: '16px',
       backgroundColor: filled ? '#00ff00' : '#003300',
       border: '1px solid #001100'
     }} />
